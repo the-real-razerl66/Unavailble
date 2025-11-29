@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Service Unavailable</title>
+  <meta name="description" content="This service is temporarily unavailable. We'll be back shortly." />
+  <style>
+    :root{
+      --bg1: #0f172a; /* deep navy */
+      --bg2: #071430; /* darker blue */
+      --accent: #7c3aed; /* violet */
+      --muted: #98a0b3;
+      --card: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.04);
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% 20%, rgba(124,58,237,0.12), transparent 8%), radial-gradient(1000px 500px at 90% 80%, rgba(14,165,233,0.06), transparent 8%), linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;align-items:center;justify-content:center;padding:24px}
+
+    .stage{width:100%;max-width:1100px;display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center}
+    @media (max-width:900px){.stage{grid-template-columns:1fr;max-width:760px}}
+
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:28px;backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(2,6,23,0.6);}
+
+    .left{padding:40px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .mark{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent), #06b6d4);box-shadow:0 8px 30px rgba(124,58,237,0.18);}
+    .mark svg{width:32px;height:32px;filter:drop-shadow(0 6px 14px rgba(12,11,29,0.6))}
+
+    h1{margin:18px 0 6px;font-size:28px;letter-spacing:-0.02em}
+    p.lead{margin:0;color:var(--muted)}
+
+    .status-row{display:flex;gap:12px;align-items:center;margin-top:20px}
+    .pill{padding:8px 12px;border-radius:999px;background:var(--glass);font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:10px}
+
+    /* Animated blobs behind the card */
+    .blobs{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+    .blob{position:absolute;border-radius:50%;filter:blur(36px);opacity:0.9;mix-blend-mode:screen}
+    .b1{width:420px;height:420px;background:linear-gradient(45deg,#7c3aed,#06b6d4);left:-120px;top:-120px;animation:move1 18s linear infinite}
+    .b2{width:300px;height:300px;background:linear-gradient(45deg,#06b6d4,#06b6d4aa);right:-100px;bottom:-80px;animation:move2 22s linear infinite}
+    .b3{width:220px;height:220px;background:linear-gradient(45deg,#ff8a65,#ff5e62);left:20%;bottom:-60px;animation:move3 16s linear infinite}
+
+    @keyframes move1{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(18px) rotate(18deg)}100%{transform:translateY(0) rotate(0deg)}}
+    @keyframes move2{0%{transform:translateX(0) rotate(0deg)}50%{transform:translateX(-24px) rotate(-12deg)}100%{transform:translateX(0) rotate(0deg)}}
+    @keyframes move3{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(8deg)}100%{transform:translateY(0) rotate(0deg)}}
+
+    /* Right column card */
+    .card{position:relative;overflow:hidden}
+    .card .inner{padding:22px}
+    .shimmer{height:6px;width:60%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);border-radius:999px;margin-bottom:18px;animation:shimmer 2.4s linear infinite}
+    @keyframes shimmer{0%{transform:translateX(-120%)}100%{transform:translateX(240%)}}
+
+    /* Spinner */
+    .spinner{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.04);}
+    .gear{width:38px;height:38px;animation:spin 3s linear infinite}
+    @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+    /* Buttons */
+    .actions{display:flex;gap:12px;margin-top:22px}
+    button{appearance:none;border:0;padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;box-shadow:0 8px 24px rgba(7,12,34,0.5)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+
+    /* typing effect */\    
+    .reason{font-weight:600;color: #e6e9f2}
+    .reason .word{display:inline-block;min-width:140px}
+
+    /* footer */
+    .foot{margin-top:28px;color:var(--muted);font-size:13px}
+
+    /* Accessibility: respects reduce motion */
+    @media (prefers-reduced-motion:reduce){
+      .blob, .gear, .shimmer, .b1, .b2, .b3{animation:none}
+    }
+
+    /* small utilities */
+    .muted{color:var(--muted)}
+    .center{display:flex;align-items:center;justify-content:center}
+
+    /* small sparkle */
+    .spark{position:absolute;width:8px;height:8px;background:rgba(255,255,255,0.9);border-radius:2px;transform:rotate(30deg);opacity:0;box-shadow:0 6px 18px rgba(124,58,237,0.12)}
+    .spark.show{animation:sparkin .9s ease forwards}
+    @keyframes sparkin{0%{transform:scale(0.2) translateY(6px);opacity:0}50%{opacity:1;transform:scale(1) translateY(-6px)}100%{opacity:0;transform:scale(1.1) translateY(-12px)}}
+
+  </style>
+</head>
+<body>
+  <div class="blobs" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <main class="stage" role="main" aria-labelledby="headline">
+
+    <section class="panel left" style="position:relative;z-index:2">
+      <div class="logo">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l9 5v8l-9 5-9-5V8l9-5z" fill="white" opacity="0.95"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:700;letter-spacing:0.03em">Your Service</div>
+          <div class="muted" style="font-size:13px">Temporarily unavailable</div>
+        </div>
+      </div>
+
+      <h1 id="headline">We'll be back shortly</h1>
+      <p class="lead">The service is temporarily shut down while we perform some improvements. We're making sure everything is safe, backed up, and running smoothly.</p>
+
+      <div class="status-row" aria-hidden="false">
+        <div class="pill" role="status" aria-live="polite">Status: <strong style="margin-left:6px;color:#e6e9f2">Paused</strong></div>
+        <div class="pill">Estimated: <strong style="margin-left:6px;color:#e6e9f2">~10–20 minutes</strong></div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:14px;flex-wrap:wrap">
+        <div style="min-width:220px">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Reason</div>
+          <div class="reason" aria-live="polite">We're currently <span class="word" id="rotating">backing up your data</span></div>
+        </div>
+
+        <div style="min-width:160px">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Need updates?</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="email" type="email" placeholder="your@email.com" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit">
+            <button class="btn-primary" id="notify">Notify</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">If you'd like, you can retry. If the problem persists after 30 minutes, contact support.</div>
+    </section>
+
+    <aside class="panel card center" aria-hidden="false">
+      <div class="inner" style="text-align:center;z-index:3">
+
+        <div class="spinner" role="img" aria-label="working">
+          <svg class="gear" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" fill="white" opacity="0.95"/><path d="M19.4 15a1 1 0 0 0 .9-1.2l-.7-3.2a7.6 7.6 0 0 0-.9-2.1l2-1.5a1 1 0 0 0 .2-1.4l-1.8-2.6a1 1 0 0 0-1.3-.3l-2.4 1a7.6 7.6 0 0 0-1.9-1L13 2.1a1 1 0 0 0-1.9 0l-.5 2.7a7.5 7.5 0 0 0-2 1l-2.4-1a1 1 0 0 0-1.3.3L2.4 7a1 1 0 0 0 .2 1.4l2 1.5c-.3.6-.6 1.3-.8 2l-.7 3.2a1 1 0 0 0 .9 1.2l3.2.5c.4.5.9 1 1.5 1.4l.3 3a1 1 0 0 0 1 .9h2.8a1 1 0 0 0 1-.9l.3-3c.6-.4 1.1-.9 1.5-1.4l3.2-.5z" fill="white" opacity="0.85"/></svg>
+        </div>
+
+        <div style="margin-top:18px;font-weight:700;font-size:18px">Temporarily unavailable</div>
+        <div style="margin-top:8px;color:var(--muted)">We're performing necessary maintenance — hang tight.</div>
+
+        <div class="shimmer" aria-hidden="true"></div>
+
+        <div class="actions">
+          <button class="btn-primary" id="retryBtn">Retry now</button>
+          <button class="btn-ghost" id="statusBtn">Service status</button>
+        </div>
+
+        <div style="margin-top:14px;color:var(--muted);font-size:13px">Tip: check for updates or reach out to the support team if this persists.</div>
+      </div>
+
+      <div class="spark" id="spark1" style="left:18px;top:22px"></div>
+      <div class="spark" id="spark2" style="right:28px;bottom:32px"></div>
+    </aside>
+
+  </main>
+
+  <script>
+    (function(){
+      const words = [
+        'backing up your data',
+        'performing maintenance',
+        'moving to a new server',
+        'applying important updates',
+        'verifying backups'
+      ];
+      let i=0; const rot = document.getElementById('rotating');
+      function rotate(){
+        i=(i+1)%words.length;
+        rot.classList.remove('fade-in');
+        rot.style.opacity = 0;
+        setTimeout(()=>{ rot.textContent = words[i]; rot.style.transition='opacity 400ms ease'; rot.style.opacity = 1; }, 220);
+      }
+      const rotateInterval = setInterval(rotate, 3500);
+
+      // Email notify button (fake): shows quick sparkle
+      document.getElementById('notify').addEventListener('click', ()=>{
+        const email = document.getElementById('email').value.trim();
+        const s1 = document.getElementById('spark1');
+        const s2 = document.getElementById('spark2');
+        if(email && email.includes('@')){
+          s1.classList.add('show'); s2.classList.add('show');
+          setTimeout(()=>{ s1.classList.remove('show'); s2.classList.remove('show'); alert('Thanks — we will notify you when the service is back.'); }, 900);
+        } else {
+          alert('Enter a valid email to be notified.');
+        }
+      });
+
+      // Retry button fakes a quick check (no network calls)
+      document.getElementById('retryBtn').addEventListener('click', ()=>{
+        const btn = document.getElementById('retryBtn');
+        btn.disabled = true; btn.textContent = 'Checking...';
+        btn.style.transform='scale(0.98)';
+        setTimeout(()=>{ btn.textContent='Retry now'; btn.disabled=false; btn.style.transform='';
+          // tiny randomized result for fun
+          if(Math.random()>0.85){ alert('Looks like the service is back — try refreshing the page.'); }
+          else { alert('Still unavailable — we are still finishing up.'); }
+        }, 1100);
+      });
+
+      // Status button: opens a small modal (native fallback)
+      document.getElementById('statusBtn').addEventListener('click', ()=>{
+        alert('Service status\n\nCurrent: Paused for maintenance\nEstimated: 10–20 minutes');
+      });
+
+      // Respect reduced motion: stop rotation if requested
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if(mq.matches){ clearInterval(rotateInterval); }
+
+      // small accessibility enhancement: announce on load
+      window.addEventListener('load', ()=>{
+        const live = document.createElement('div');
+        live.setAttribute('aria-live','polite'); live.style.position='absolute'; live.style.left='-9999px';
+        live.textContent='Service currently unavailable. Estimated downtime: 10 to 20 minutes.';
+        document.body.appendChild(live);
+      });
+
+    })();
+  </script>
+</body>
+</html>
